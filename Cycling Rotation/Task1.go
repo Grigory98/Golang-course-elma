@@ -5,7 +5,7 @@ import (
 )
 
 func main() {
-	var A = [5]int{3, 8, 9, 7, 6}
+	var A = []int{3, 8, 9, 7, 6}
 	fmt.Println(Solution(A[:], 3))
 }
 
