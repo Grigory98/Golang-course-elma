@@ -123,7 +123,7 @@ func getResult(request []interface{}, action string) []int {
 	fmt.Println("HTTP JSON POST URL:", httpposturl)
 
 	var jsonData = []byte(`{
-		"user_name": "morpheuss",
+		"user_name": "test",
 		"task": "Циклическая ротация",
 		"results": {
 			"payloads": [1,2,3],
