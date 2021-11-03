@@ -1,43 +1,64 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
+	convert "microservice/converts"
 	"microservice/tasks"
 	"net/http"
 )
 
 func main() {
+	name := "Grigory98"
 	var choise int
 	fmt.Printf("Введите номер задачки:\n1)Циклическая ротация\n2)Поиск отсутствующего элемента\n3)Чудные вхождения в массив\n4)Проверка последовательности\n")
 	fmt.Scanf("%d", &choise)
 	switch {
 	case choise == 1:
 		//Решение первой задачки(Циклическая ротация)
+		taskName := "Циклическая ротация"
 		request := MakeRequest("http://116.203.203.76:3000/tasks/%D0%A6%D0%B8%D0%BA%D0%BB%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%B0%D1%8F%20%D1%80%D0%BE%D1%82%D0%B0%D1%86%D0%B8%D1%8F")
-		answer := doFirstTask(request)
-		fmt.Println(answer)
+		req := convert.ConvertRequest(request)
 
+		answer := doFirstTask(request)
+		answ := convert.ConvertAnswer(answer)
+
+		sendResult(name, taskName, req, answ)
 	case choise == 2:
 		//Решение второй задачки(Поиск отсутствующего элемента)
+		taskName := "Поиск отсутствующего элемента"
 		request := MakeRequest("http://116.203.203.76:3000/tasks/%D0%9F%D0%BE%D0%B8%D1%81%D0%BA%20%D0%BE%D1%82%D1%81%D1%83%D1%82%D1%81%D1%82%D0%B2%D1%83%D1%8E%D1%89%D0%B5%D0%B3%D0%BE%20%D1%8D%D0%BB%D0%B5%D0%BC%D0%B5%D0%BD%D1%82%D0%B0")
+		req := convert.ConvertRequest(request)
+
 		answer := getResult(request, "Task2")
-		fmt.Println(answer)
+		answ := convert.ConvertAnswer_2(answer)
+
+		sendResult(name, taskName, req, answ)
 	case choise == 3:
 		//Решение третьей задачки(Чудные вхождения в массив)
+		taskName := "Чудные вхождения в массив"
 		request := MakeRequest("http://116.203.203.76:3000/tasks/%D0%A7%D1%83%D0%B4%D0%BD%D1%8B%D0%B5%20%D0%B2%D1%85%D0%BE%D0%B6%D0%B4%D0%B5%D0%BD%D0%B8%D1%8F%20%D0%B2%20%D0%BC%D0%B0%D1%81%D1%81%D0%B8%D0%B2")
+		req := convert.ConvertRequest(request)
+
 		answer := getResult(request, "Task3")
-		fmt.Println(answer)
+		answ := convert.ConvertAnswer_2(answer)
+
+		sendResult(name, taskName, req, answ)
 	case choise == 4:
 		//Решение задачки(Проверка последовательности)
+		taskName := "Проверка последовательности"
 		request := MakeRequest("http://116.203.203.76:3000/tasks/%D0%9F%D1%80%D0%BE%D0%B2%D0%B5%D1%80%D0%BA%D0%B0%20%D0%BF%D0%BE%D1%81%D0%BB%D0%B5%D0%B4%D0%BE%D0%B2%D0%B0%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D0%BE%D1%81%D1%82%D0%B8")
+		req := convert.ConvertRequest(request)
+
 		answer := getResult(request, "Task4")
-		fmt.Println(answer)
-		/*case choise == 5:
+		answ := convert.ConvertAnswer_2(answer)
+
+		sendResult(name, taskName, req, answ)
+	case choise == 5:
 		//sendPOSTTEST()
-		*/
 	}
 
 }
@@ -117,20 +138,17 @@ func getResult(request []interface{}, action string) []int {
 	return answer
 }
 
-//Это должно было работать, но не работает по причине: Не могу отправить post запрос на task/solution. Из браузера тоже не отправляется.
-/*func sendPOSTTEST() {
+//Отправляет POST запрос на сервер и получает результат отчета об ошибках
+func sendResult(name string, taskName string, req string, answ string) {
 	httpposturl := "http://116.203.203.76:3000/tasks/solution"
 	fmt.Println("HTTP JSON POST URL:", httpposturl)
-
-	var jsonData = []byte(`{
-		"user_name": "test",
-		"task": "Циклическая ротация",
-		"results": {
-			"payloads": [1,2,3],
-			"results": [1,2,3]
-		},
+	var jsonData = []byte(`{"user_name": "` + name + `",
+		"task":"` + taskName + `",
+		"results":{
+			"payload": ` + req + `,
+			"results": ` + answ + `
+		}
 	}`)
-	//fmt.Printf("%T\n", bytes.NewBuffer(jsonData))
 
 	request, err := http.NewRequest("POST", httpposturl, bytes.NewBuffer(jsonData))
 	if err != nil {
@@ -149,4 +167,4 @@ func getResult(request []interface{}, action string) []int {
 	fmt.Println("response Headers:", response.Header)
 	body, _ := ioutil.ReadAll(response.Body)
 	fmt.Println("response Body:", string(body))
-}*/
+}
