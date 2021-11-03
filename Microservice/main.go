@@ -14,51 +14,56 @@ import (
 func main() {
 	name := "Grigory98"
 	var choise int
-	fmt.Printf("Введите номер задачки:\n1)Циклическая ротация\n2)Поиск отсутствующего элемента\n3)Чудные вхождения в массив\n4)Проверка последовательности\n")
+	fmt.Printf("Введите номер задачки:\n1)Циклическая ротация\n2)Поиск отсутствующего элемента\n3)Чудные вхождения в массив\n4)Проверка последовательности\n5)Решение всех задач\n")
 	fmt.Scanf("%d", &choise)
 	switch {
 	case choise == 1:
 		//Решение первой задачки(Циклическая ротация)
-		taskName := "Циклическая ротация"
-		request := MakeRequest("http://116.203.203.76:3000/tasks/%D0%A6%D0%B8%D0%BA%D0%BB%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%B0%D1%8F%20%D1%80%D0%BE%D1%82%D0%B0%D1%86%D0%B8%D1%8F")
-		req := convert.ConvertRequest(request)
-
-		answer := doFirstTask(request)
-		answ := convert.ConvertAnswer(answer)
-
-		sendResult(name, taskName, req, answ)
+		fmt.Println(solveFirstTask(name))
 	case choise == 2:
 		//Решение второй задачки(Поиск отсутствующего элемента)
 		taskName := "Поиск отсутствующего элемента"
-		request := MakeRequest("http://116.203.203.76:3000/tasks/%D0%9F%D0%BE%D0%B8%D1%81%D0%BA%20%D0%BE%D1%82%D1%81%D1%83%D1%82%D1%81%D1%82%D0%B2%D1%83%D1%8E%D1%89%D0%B5%D0%B3%D0%BE%20%D1%8D%D0%BB%D0%B5%D0%BC%D0%B5%D0%BD%D1%82%D0%B0")
-		req := convert.ConvertRequest(request)
-
-		answer := getResult(request, "Task2")
-		answ := convert.ConvertAnswer_2(answer)
-
-		sendResult(name, taskName, req, answ)
+		url := "%D0%9F%D0%BE%D0%B8%D1%81%D0%BA%20%D0%BE%D1%82%D1%81%D1%83%D1%82%D1%81%D1%82%D0%B2%D1%83%D1%8E%D1%89%D0%B5%D0%B3%D0%BE%20%D1%8D%D0%BB%D0%B5%D0%BC%D0%B5%D0%BD%D1%82%D0%B0"
+		fmt.Println(solveTask(name, taskName, url))
 	case choise == 3:
 		//Решение третьей задачки(Чудные вхождения в массив)
 		taskName := "Чудные вхождения в массив"
-		request := MakeRequest("http://116.203.203.76:3000/tasks/%D0%A7%D1%83%D0%B4%D0%BD%D1%8B%D0%B5%20%D0%B2%D1%85%D0%BE%D0%B6%D0%B4%D0%B5%D0%BD%D0%B8%D1%8F%20%D0%B2%20%D0%BC%D0%B0%D1%81%D1%81%D0%B8%D0%B2")
-		req := convert.ConvertRequest(request)
-
-		answer := getResult(request, "Task3")
-		answ := convert.ConvertAnswer_2(answer)
-
-		sendResult(name, taskName, req, answ)
+		url := "%D0%A7%D1%83%D0%B4%D0%BD%D1%8B%D0%B5%20%D0%B2%D1%85%D0%BE%D0%B6%D0%B4%D0%B5%D0%BD%D0%B8%D1%8F%20%D0%B2%20%D0%BC%D0%B0%D1%81%D1%81%D0%B8%D0%B2"
+		fmt.Println(solveTask(name, taskName, url))
 	case choise == 4:
 		//Решение задачки(Проверка последовательности)
 		taskName := "Проверка последовательности"
-		request := MakeRequest("http://116.203.203.76:3000/tasks/%D0%9F%D1%80%D0%BE%D0%B2%D0%B5%D1%80%D0%BA%D0%B0%20%D0%BF%D0%BE%D1%81%D0%BB%D0%B5%D0%B4%D0%BE%D0%B2%D0%B0%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D0%BE%D1%81%D1%82%D0%B8")
-		req := convert.ConvertRequest(request)
-
-		answer := getResult(request, "Task4")
-		answ := convert.ConvertAnswer_2(answer)
-
-		sendResult(name, taskName, req, answ)
+		url := "%D0%9F%D1%80%D0%BE%D0%B2%D0%B5%D1%80%D0%BA%D0%B0%20%D0%BF%D0%BE%D1%81%D0%BB%D0%B5%D0%B4%D0%BE%D0%B2%D0%B0%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D0%BE%D1%81%D1%82%D0%B8"
+		fmt.Println(solveTask(name, taskName, url))
 	case choise == 5:
-		//sendPOSTTEST()
+		message := make(chan string, 4)
+
+		go func() {
+			message <- solveFirstTask(name)
+		}()
+
+		go func() {
+			taskName := "Поиск отсутствующего элемента"
+			url := "%D0%9F%D0%BE%D0%B8%D1%81%D0%BA%20%D0%BE%D1%82%D1%81%D1%83%D1%82%D1%81%D1%82%D0%B2%D1%83%D1%8E%D1%89%D0%B5%D0%B3%D0%BE%20%D1%8D%D0%BB%D0%B5%D0%BC%D0%B5%D0%BD%D1%82%D0%B0"
+			message <- solveTask(name, taskName, url)
+		}()
+
+		go func() {
+			taskName := "Чудные вхождения в массив"
+			url := "%D0%A7%D1%83%D0%B4%D0%BD%D1%8B%D0%B5%20%D0%B2%D1%85%D0%BE%D0%B6%D0%B4%D0%B5%D0%BD%D0%B8%D1%8F%20%D0%B2%20%D0%BC%D0%B0%D1%81%D1%81%D0%B8%D0%B2"
+			message <- solveTask(name, taskName, url)
+		}()
+
+		go func() {
+			taskName := "Проверка последовательности"
+			url := "%D0%9F%D1%80%D0%BE%D0%B2%D0%B5%D1%80%D0%BA%D0%B0%20%D0%BF%D0%BE%D1%81%D0%BB%D0%B5%D0%B4%D0%BE%D0%B2%D0%B0%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D0%BE%D1%81%D1%82%D0%B8"
+			message <- solveTask(name, taskName, url)
+		}()
+
+		fmt.Println(<-message)
+		fmt.Println(<-message)
+		fmt.Println(<-message)
+		fmt.Println(<-message)
 	}
 
 }
@@ -125,11 +130,11 @@ func getResult(request []interface{}, action string) []int {
 		}
 
 		switch {
-		case action == "Task2":
+		case action == "Поиск отсутствующего элемента":
 			result = tasks.SolutionTask2(arrayNumbers)
-		case action == "Task3":
+		case action == "Чудные вхождения в массив":
 			result = tasks.SolutionTask3(arrayNumbers)
-		case action == "Task4":
+		case action == "Проверка последовательности":
 			result = tasks.SolutionTask4(arrayNumbers)
 		}
 		arrayNumbers = nil
@@ -139,9 +144,10 @@ func getResult(request []interface{}, action string) []int {
 }
 
 //Отправляет POST запрос на сервер и получает результат отчета об ошибках
-func sendResult(name string, taskName string, req string, answ string) {
+func sendResult(name string, taskName string, req string, answ string) string {
+	msg := "Task: " + taskName + "\n"
 	httpposturl := "http://116.203.203.76:3000/tasks/solution"
-	fmt.Println("HTTP JSON POST URL:", httpposturl)
+	msg = msg + "HTTP JSON POST URL:" + httpposturl + "\n"
 	var jsonData = []byte(`{"user_name": "` + name + `",
 		"task":"` + taskName + `",
 		"results":{
@@ -163,8 +169,37 @@ func sendResult(name string, taskName string, req string, answ string) {
 	}
 	defer response.Body.Close()
 
-	fmt.Println("response Status:", response.Status)
-	fmt.Println("response Headers:", response.Header)
+	msg = msg + "response Status:" + response.Status + "\n"
+	//fmt.Println("response Headers:", response.Header)
 	body, _ := ioutil.ReadAll(response.Body)
-	fmt.Println("response Body:", string(body))
+	msg = msg + "response Body:" + string(body) + "\n"
+	return msg
+}
+
+//Решает первую задачу
+func solveFirstTask(name string) string {
+	taskName := "Циклическая ротация"
+	//fmt.Printf("\nРешаю задачку (%v)\n", taskName)
+	var msg string
+	request := MakeRequest("http://116.203.203.76:3000/tasks/%D0%A6%D0%B8%D0%BA%D0%BB%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%B0%D1%8F%20%D1%80%D0%BE%D1%82%D0%B0%D1%86%D0%B8%D1%8F")
+	req := convert.ConvertRequest(request)
+
+	answer := doFirstTask(request)
+	answ := convert.ConvertAnswer(answer)
+
+	msg = sendResult(name, taskName, req, answ)
+	return msg
+}
+
+//Решает задачу(2,3,4)
+func solveTask(name string, taskName string, url string) string {
+	var msg string
+	request := MakeRequest("http://116.203.203.76:3000/tasks/" + url)
+	req := convert.ConvertRequest(request)
+
+	answer := getResult(request, taskName)
+	answ := convert.ConvertAnswer_2(answer)
+
+	msg = sendResult(name, taskName, req, answ)
+	return msg
 }
