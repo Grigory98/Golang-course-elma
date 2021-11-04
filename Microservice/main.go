@@ -9,6 +9,7 @@ import (
 	convert "microservice/converts"
 	"microservice/tasks"
 	"net/http"
+	"sync"
 )
 
 func main() {
@@ -117,10 +118,10 @@ func getResult(request []interface{}, action string) []int {
 	var firstConvert []interface{}
 	var convertArray []interface{}
 	var arrayNumbers []int
-	var answer []int
-	var result int
+	answer := make([]int, 10)
+	//var result int
 	length := len(request)
-
+	wg := new(sync.WaitGroup)
 	for i := 0; i < length; i++ {
 		firstConvert = request[i].([]interface{})
 		convertArray = firstConvert[0].([]interface{})
@@ -131,15 +132,29 @@ func getResult(request []interface{}, action string) []int {
 
 		switch {
 		case action == "Поиск отсутствующего элемента":
-			result = tasks.SolutionTask2(arrayNumbers)
+			wg.Add(1)
+			go func(arrayNumbers []int, count int) {
+				defer wg.Done()
+				answer[count] = tasks.SolutionTask2(arrayNumbers)
+			}(arrayNumbers, i)
+
 		case action == "Чудные вхождения в массив":
-			result = tasks.SolutionTask3(arrayNumbers)
+			wg.Add(1)
+			go func(arrayNumbers []int, count int) {
+				defer wg.Done()
+				answer[count] = tasks.SolutionTask3(arrayNumbers)
+			}(arrayNumbers, i)
+
 		case action == "Проверка последовательности":
-			result = tasks.SolutionTask4(arrayNumbers)
+			wg.Add(1)
+			go func(arrayNumbers []int, count int) {
+				defer wg.Done()
+				answer[count] = tasks.SolutionTask4(arrayNumbers)
+			}(arrayNumbers, i)
 		}
 		arrayNumbers = nil
-		answer = append(answer, result)
 	}
+	wg.Wait()
 	return answer
 }
 
